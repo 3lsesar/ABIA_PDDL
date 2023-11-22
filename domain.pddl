@@ -25,8 +25,8 @@
         :precondition 
             (and (llegit ?l1) (predecessor ?l1 ?l2) (predecessor ?m1 ?m2) (mes_lectura ?l1 ?m1) 
                 (forall (?l - llibre)
-                    (imply (and (predecessor ?l ?l2)) (llegit ?l))   
-                )   
+                    (imply (and (predecessor ?l ?l2)) (and (llegit ?l) (mes_lectura ?l ?m1)))   
+                )
             )
         :effect (and (llegit ?l2) (mes_lectura ?l2 ?m2) (increase (mes_sumatori) (mes ?m2)))
     )
