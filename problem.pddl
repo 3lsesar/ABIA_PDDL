@@ -1,6 +1,6 @@
 (define (problem problema_llibres)
   (:domain domini_llibres)
-  (:objects A B B1 B2 B3 B4 C D E F G H - llibre 
+  (:objects A B B1 B2 B3 B4 C C1 C2 C3 D E F G H - llibre 
             gener febrer març abril maig juny juliol agost setembre octubre novembre desembre - mes)
   (:init 
         (= (mes_sumatori) 0)
@@ -37,19 +37,25 @@
         (predecessor A B1)
         (predecessor B1 B2)
         (predecessor B2 B3)
-        
-        (paralel B B4)
-        (paralel B4 B)
+  
         (paralel B B1)
         (paralel B1 B)
-        (paralel B1 B4)
-        (paralel B4 B1)
 
         (predecessor B C)
         ;(predecessor B1 C)
         ;(predecessor B2 C)
-        (predecessor B3 C)
+        (paralel B3 C)
+        (paralel C B3)
+        (paralel C C1)
+        (paralel C1 C)
+        (paralel C C2)
+        (paralel C2 C)
+        (paralel C C3)
+        (paralel C3 C)
+        
+        
         (predecessor B4 C)
+        
         (predecessor C D)
         (predecessor D E)
         (predecessor E F)

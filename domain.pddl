@@ -24,29 +24,39 @@
     (:action llegir
         :parameters (?l1 - llibre ?l2 - llibre ?m1 - mes ?m2 - mes)
         :precondition 
-            (and (llegit ?l1) (predecessor ?l1 ?l2) (< (mes ?m1) (mes ?m2)) (mes_lectura ?l1 ?m1) 
-                (forall (?l - llibre)
-                    (imply (and (predecessor ?l ?l2)) (and (llegit ?l) (mes_lectura ?l ?m1)))   
-                )
-            )
-        :effect (and (llegit ?l2) (mes_lectura ?l2 ?m2) (increase (mes_sumatori) (mes ?m2)))
-    )
-
-    (:action llegir-paralel
-        :parameters (?l1 - llibre ?l2 - llibre ?m1 - mes ?m2 - mes ?m3 - mes)
-        :precondition 
             (and 
-            (llegit ?l1) (paralel ?l1 ?l2) (mes_lectura ?l1 ?m1) (or (predecessor ?m1 ?m2) (= (mes ?m1) (mes ?m2)))
-                (forall (?l - llibre)
-                    (imply (and (predecessor ?l ?l2)) (and (llegit ?l) (mes_lectura ?l ?m3) (<(mes ?m3) (mes ?m2))))   
+                (llegit ?l1) 
+                (or 
+                    (and 
+                        (< (mes ?m1) (mes ?m2))
+                        (predecessor ?l1 ?l2) 
+                        (not (exists (?l3 - llibre) (and (not(llegit ?l3)) (paralel ?l1 ?l3))))
+                    )
+                    
+                    (and 
+                        (paralel ?l1 ?l2)
+                        (mes_lectura ?l1 ?m1)
+                        (not (exists (?l3 - llibre) (and (llegit ?l3) (mes_lectura ?l3 ?m1) (predecessor ?l3 ?l2) (>= (mes ?m1) (mes ?m2)))))
+                        (or 
+                            (= (mes ?m1) (mes ?m2)) 
+                            (= (mes ?m1) (- (mes ?m2) 1)) 
+                            (and (= (mes ?m1) (+ (mes ?m2) 1)))
+                        )     
+                    )
                 )
+                (forall (?l - llibre)
+                    (imply  (predecessor ?l ?l2) 
+                            (and (llegit ?l) (mes_lectura ?l ?m1))   
+                    )
+                )
+                
             )
         :effect (and (llegit ?l2) (mes_lectura ?l2 ?m2) (increase (mes_sumatori) (mes ?m2)))
     )
 
     (:action start
-        :parameters (?l - llibre ?m - mes)
-        :precondition (and (not (llegit ?l)) (forall (?l2 - llibre) (not (predecessor ?l2 ?l))))
-        :effect (and (llegit ?l) (mes_lectura ?l ?m) (increase (mes_sumatori) (mes ?m)))
+       :parameters (?l - llibre ?m - mes)
+       :precondition (and (not (llegit ?l)) (forall (?l2 - llibre) (not (predecessor ?l2 ?l))))
+       :effect (and (llegit ?l) (mes_lectura ?l ?m) (increase (mes_sumatori) (mes ?m)))
     )
 )
