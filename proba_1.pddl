@@ -1,7 +1,7 @@
 (define (problem problema_llibres) 
  (:domain domini_llibres) 
  (:objects gener febrer marc abril maig juny juliol agost setembre octubre novembre desembre - mes 
-A B C D E - llibre) 
+           A B C D E - llibre) 
  (:init 
   (= (mes_sumatori) 0) 
   (= (mes gener) 1) 
@@ -31,9 +31,15 @@ A B C D E - llibre)
   (predecessor desembre gener) 
 
   (llegit B) 
-  (= (mes_lectura B) 0) 
+  (= (mes_lectura B) 1) 
 
   (predecessor A A) 
-  (predecessor E D) 
-  (predecessor E E) 
   (predecessor C A) 
+  (predecessor C D) 
+  (predecessor C E) 
+
+ ) 
+
+ (:goal (llegit F)) 
+ (:metric minimize (mes_sumatori)) 
+)

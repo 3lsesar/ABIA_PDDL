@@ -5,6 +5,7 @@ def generador_base(llibres: int, llegits = 0, predecesors = 0):
         archivo.write("(define (problem problema_llibres) \n")
         archivo.write(" (:domain domini_llibres) \n")
         archivo.write(" (:objects gener febrer marc abril maig juny juliol agost setembre octubre novembre desembre - mes \n") 
+        archivo.write("           ")
         
         for i in range(65, llibres + 65):
             character = chr(i)
@@ -50,7 +51,7 @@ def generador_base(llibres: int, llegits = 0, predecesors = 0):
             archivo.write("  (= (mes_lectura ")
             archivo.write(character)
             archivo.write(") ")
-            archivo.write(str(j))
+            archivo.write(str(j+1))
             archivo.write(") \n")
             archivo.write("\n")
         
@@ -64,6 +65,18 @@ def generador_base(llibres: int, llegits = 0, predecesors = 0):
             archivo.write(" ")
             archivo.write(character2)
             archivo.write(") \n")
+
+
+        archivo.write("\n")
+        archivo.write(" ) \n")
+        archivo.write("\n")
+        archivo.write(" (:goal (llegit ")
+        llib = chr(llibres + 65)
+        archivo.write(llib)
+        archivo.write(")) \n")
+        archivo.write(" (:metric minimize (mes_sumatori)) \n")
+        archivo.write(")")
+
 
 def generador_extension_1(llibres: int, llegits = 0, predecesors = 0, paralels = 0):
     with open ('proba_1.pddl', 'w') as archivo:
