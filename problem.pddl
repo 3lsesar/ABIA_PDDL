@@ -1,7 +1,8 @@
 (define (problem problema_llibres)
   (:domain domini_llibres)
   (:objects A B B1 B2 B3 D0 C C1 C2 C3 D E F G H D1 - llibre 
-            gener febrer marc abril maig juny juliol agost setembre octubre novembre desembre - mes)
+            gener febrer marc abril maig juny juliol agost setembre octubre novembre desembre - mes
+  )
   (:init 
         (= (mes_sumatori) 0)
         (= (mes gener) 1)
