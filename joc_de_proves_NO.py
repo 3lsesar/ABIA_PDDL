@@ -1,6 +1,7 @@
 import random
+import 
 class Generador:
-    def __init__(self, nom_arxiu, objectiu = 1, llibres: int, llegits = 0, predecesors = 0, paralels = 0):
+    def __init__(self, nom_arxiu, objectiu = 1, llibres: int = 1, sagas = 1, llegits = 0, predecesors = 0, paralels = 0):
         self.nom_arxiu = nom_arxiu
         self.objectiu_num = objectiu
         self.llibres_num = llibres
@@ -10,12 +11,17 @@ class Generador:
 
         self.llibres_llista = []
         self.llegits_llista = []
-        self.predecesors_llista = []
-
+        self.llibres_en_saga = []
+        self.llista_sagas = []
+        self.num_sagas = sagas
+        
         with open (self.nom_arxiu, 'w') as archivo:
              self.generador_objectes(archivo)
              self.generador_mesos(archivo)
              self.generador_llegits(archivo)
+
+   
+        
     
     def generador_objectes(self,archivo):
         archivo.write("(define (problem problema_llibres) \n")
@@ -75,24 +81,67 @@ class Generador:
             archivo.write("\n")
             self.llegits_llista.append(character)
     
-    def generador_predecesors(self,archivo): 
-        i = -1   
-        for __ in range(self.predecesors_num):
-            if self.predecesors_llista == []:
-                a = random.randint(65, self.llibres_num + 65)
-                character = chr(a)
-                b = random.randint(65, self.llibres_num + 65)
-                character2 = chr(b)
-                self.predecesors_llista.append(character,character2)
+    def generador_predecesors(self,archivo):
+        if self.predecesors_num == 0:
+            pass
+        else: 
+            if self.num_sagas == 1:
+                for i in range(self.predecesors_num):
+                    if self.llibres_en_saga == []:
+                        a = random.randint(65, self.llibres_num + 65)
+                        character = chr(a)
+                        self.llibres_en_saga.append(a)
+                        b = random.choice(random.randint(65, a - 1), random.randint(a + 1, self.llibres_num + 65))
+                        character2 = chr(b)
+                        archivo.write("  (predecessor ")
+                        archivo.write(character)
+                        archivo.write(" ")
+                        archivo.write(character2)
+                        archivo.write(") \n")
+                        self.predecesors_llista.append(character,character2)
+                    else:
+                        a = self.llibres_en_saga.pop()
+                        self.llibres_en_saga.append(a)
+                        character = chr(a)
+                        b = random.choice(random.randint(65, a - 1), random.randint(a + 1, self.llibres_num + 65))
+                        if b not in self.llibres_en_saga:
+                            character2 = chr(b)
+                            self.llibres_en_saga.append(b)
+                        else:
+                            while b in self.llibres_en_saga:
+                                b = random.choice(random.randint(65, a - 1), random.randint(a + 1, self.llibres_num + 65))
+                            character2 = chr(b)
+                            self.llibres_en_saga.append(b)
+                        archivo.write("  (predecessor ")
+                        archivo.write(character)
+                        archivo.write(" ")
+                        archivo.write(character2)
+                        archivo.write(") \n")
+                        self.predecesors_llista.append(character,character2)
             else:
-                character = self.predecesors_llista[i]
-            
-            archivo.write("  (predecessor ")
-            archivo.write(character)
-            archivo.write(" ")
-            archivo.write(character2)
-            archivo.write(") \n")
-            self.predecesors_llista.append(character,character2)
+                for i in range(self.predecesors_num):
+                    for __ in self.num_sagas:
+                        self.llista_sagas.append([])
+                    if self.llibres_en_saga == []:
+                        a = random.randint(65, self.llibres_num + 65)
+                        
+
+                    character = chr(a)
+                    b = random.choice(random.randint(65, a - 1), random.randint(a + 1, self.llibres_num + 65))
+                    character2 = chr(b)
+
+  
+
+
+        
+        
+        archivo.write("  (predecessor ")
+        archivo.write(character)
+        archivo.write(" ")
+        archivo.write(character2)
+        archivo.write(") \n")
+        self.predecesors_llista.append(character,character2)
+
 
     def generador_final(self,archivo):
         archivo.write("\n")
