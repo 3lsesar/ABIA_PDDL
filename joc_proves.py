@@ -25,12 +25,11 @@ class Generador:
             
             if self.predecesors == []:
                 return True 
+            elif book not in self.predecesors:
+                for elem in self.predecesors:
+                    return elem.comp_pred(book)
             else:
-                for elem in self.predecesors: 
-                    if book not in elem.predecesors:
-                        return elem.comp_pred(book)
-                    else:
-                        return False
+                return False
             return True
 
         def comp_paralel(self, book):
@@ -59,12 +58,13 @@ class Generador:
 
         self.llibres = []
 
-        with open (self.nom_arxiu, 'w') as archivo:
+        with open (self.archivo, 'w') as archivo:
              self.generador_objectes(archivo)
              self.generador_mesos(archivo)
              self.generador_llegits(archivo)
              self.generador_predecesors(archivo)
-
+             self.generador_paralels(archivo)
+             self.generador_objectius(archivo)
 
     def generador_objectes(self,archivo):
         archivo.write("(define (problem problema_llibres) \n")
@@ -158,4 +158,19 @@ class Generador:
             archivo.write(") \n")
         archivo.write("\n")
 
-         
+    def generador_objectius(self,archivo):
+        archivo.write("  (:goal \n")
+        archivo.write("   (and \n")
+        for i in range(self.num_objectius):
+            llibre = random.choice(self.llibres)
+            while llibre.llegit == True:
+                llibre = random.choice(self.llibres)
+            archivo.write("   (llegit ")
+            archivo.write(llibre.name)
+            archivo.write(") \n")
+        archivo.write("   ) \n")
+        archivo.write("  ) \n")
+        archivo.write(" ) \n")
+        archivo.write(") \n")
+
+Generador('provaF.pddl', 20, 2, 1, 7, 5)         
