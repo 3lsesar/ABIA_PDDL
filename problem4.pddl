@@ -17,8 +17,8 @@
         (= (mes novembre) 11)
         (= (mes desembre) 12)
       
-        (llegit A)
-        (= (mes_lectura A) 1)
+        ;(llegit A)
+        ;(= (mes_lectura A) 1)
       
         (predecessor A B)
         (predecessor B C)

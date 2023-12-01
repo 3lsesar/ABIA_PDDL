@@ -20,7 +20,7 @@
       
         ;(llegit A)
         ;(= (mes_lectura A) 1)
-        (per_llegir E)
+        (per_llegir E1)
 
 
         (predecessor A B)
@@ -33,13 +33,13 @@
         (predecessor C1 D)
 
         (paralel A1 C)        
-        (paralel C A1)
+        ;(paralel C A1)
         
         (paralel E E1)
-        (paralel E1 E)  
+        ;(paralel E1 E)  
 
         (paralel D D1)
-        (paralel D1 D)
+        ;(paralel D1 D)
         
   )
   (:goal 
