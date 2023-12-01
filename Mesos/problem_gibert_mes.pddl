@@ -41,7 +41,7 @@
         (= (pagines D1) 400)
       
         (llegit A)
-        (= (mes_lectura A) 1)
+        (= (mes_lectura A) 0)
 
         (per_llegir D1)
       
