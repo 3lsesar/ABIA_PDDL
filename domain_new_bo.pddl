@@ -13,7 +13,7 @@
     (:predicates
         (llegit ?x - llibre)
         (predecessor ?x - llibre ?y - llibre)
-        (paralel ?x ?y - llibre)
+        (paralel ?x - llibre ?y - llibre)
         (per_llegir ?x - llibre)
         
     )
@@ -27,15 +27,15 @@
         :precondition 
             (and 
                 (not (llegit ?l))
-                (forall (?l3 - llibre) ;comprova que tots les predecessors de l2 estan llegits abans de m
+                (forall (?l2 - llibre) 
                     (and
-                        (imply  (predecessor ?l3 ?l) 
-                            (and (llegit ?l3) (<(mes_lectura ?l3) (mes ?m))); (not (exists (?l4 - llibre) (and (not(llegit ?l4)) (paralel ?l4 ?l3)))) )   
+                        (imply  (predecessor ?l2 ?l) ;comprova que tots les predecessors de l estan llegits abans de m
+                            (and (llegit ?l2) (<(mes_lectura ?l2) (mes ?m)))
                         )
-                        (imply (and (or (paralel ?l3 ?l) (paralel ?l ?l3)) (llegit ?l3))
+                        (imply (and (or (paralel ?l2 ?l) (paralel ?l ?l2)) (llegit ?l2)) ;comprova que tots les paral·lels de l estan llegits en el mes d'abans, el següent o el mateix que m
                             (and
-                                (<= (- (mes_lectura ?l3) (mes ?m)) 1)
-                                (<= (- (mes ?m) (mes_lectura ?l3)) 1)
+                                (<= (- (mes_lectura ?l2) (mes ?m)) 1)
+                                (<= (- (mes ?m) (mes_lectura ?l2)) 1)
                             )
                         )
                     )          
