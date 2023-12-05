@@ -81,4 +81,5 @@
    (not (per_llegir ?l)) 
   ) 
  ) 
+ (:metric minimize (mes_sumatori))
 )

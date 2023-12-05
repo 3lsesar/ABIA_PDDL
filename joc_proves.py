@@ -1,13 +1,12 @@
 import random
 
 class Generador:
-    class Node:
-        def __init__(self, name):
+    class Llibre:
+        def __init__(self, name, pags):
             self.name = name
             self.predecesors = []
             self.paralel = []
-            #self.pagines = str(random.randint(50,800))
-            self.pagines = str(400)
+            self.pagines = pags
             self.llegit = False
 
         def __str__(self):
@@ -49,13 +48,14 @@ class Generador:
                 return False
             return True
 
-    def __init__(self, nom = 'prova', llibres = 1, llegits = 0, objectius = 1, predecesors = 0, pararels = 0):
+    def __init__(self, nom = 'prova', llibres = 1, llegits = 0, objectius = 1, predecesors = 0, pararels = 0, pags = random.randint(50, 800)):
         self.archivo = nom
         self.num_llibres = llibres
         self.num_llegits = llegits
         self.num_objectius = objectius
         self.num_predecesors = predecesors
         self.num_paralels = pararels
+        self.pags = pags
 
         self.llibres = []
 
@@ -78,19 +78,19 @@ class Generador:
         archivo.write(" (:objects gener febrer marc abril maig juny juliol agost setembre octubre novembre desembre - mes \n") 
         archivo.write("           ")
         
-        for i in range(self.num_llibres):
-            if  0 <= i > 26:
-                a = i + 65
-                character = chr(a)
+        for i in range(65, self.num_llibres + 65):
+            if i > 90:
+                x = 26 * ((i - 65) // 26)
+                b = i - x
+                character = chr(b) + str(x)
                 archivo.write(character)
                 archivo.write(" ")
-                self.llibres.append(self.Node(character))
+                self.llibres.append(self.Llibre(character, self.pags))
             else:
-                a = i + 97
-                character = chr(a)
+                character = str(chr(i))
                 archivo.write(character)
                 archivo.write(" ")
-                self.llibres.append(self.Node(character))
+                self.llibres.append(self.Llibre(character, self.pags))
         archivo.write("- llibre) \n")
     
     def generador_mesos(self,archivo):
@@ -162,7 +162,7 @@ class Generador:
             archivo.write("  (= (pagines ")
             archivo.write(elem.name)
             archivo.write(") ")
-            archivo.write(elem.pagines)
+            archivo.write(str(elem.pagines))
             archivo.write(") \n")
 
     def generador_paralels(self,archivo):
@@ -171,6 +171,10 @@ class Generador:
             paralel = random.choice(self.llibres)
             while llibre.comp_paralel(paralel) == False or paralel == llibre:
                 paralel = random.choice(self.llibres)
+            for elem in paralel.paralel:
+                llibre.paralel.append(elem)
+            for elem in llibre.paralel:
+                paralel.paralel.append(elem)
             llibre.paralel.append(paralel)
             paralel.paralel.append(llibre)
             archivo.write("  (paralel ")
@@ -178,15 +182,10 @@ class Generador:
             archivo.write(" ")
             archivo.write(paralel.name)
             archivo.write(") \n")
-            archivo.write("  (paralel ")
-            archivo.write(paralel.name)
-            archivo.write(" ")
-            archivo.write(llibre.name)
-            archivo.write(") \n")
         archivo.write("\n")
 
     def generador_objectius(self,archivo):
-        for i in range(self.num_objectius):
+        for _ in range(self.num_objectius):
             llibre = random.choice(self.llibres)
             while llibre.llegit == True:
                 llibre = random.choice(self.llibres)
@@ -202,8 +201,13 @@ class Generador:
         archivo.write("   (not (per_llegir ?l)) \n")
         archivo.write("  ) \n")
         archivo.write(" ) \n")
+        archivo.write(" (:metric minimize (mes_sumatori))")
         archivo.write(")")
 
         
-## ("nombre_archivo", num_libros, leidos, objetivo, predecesores, paralelos)
-Generador('time_growth_problem6', 40, 0, 4, 36, 0)      
+## ("nombre_archivo", num_libros, leidos, objetivo, predecesores, paralelos, pags )
+Generador('time_growth_problem2_paralel', 3, 0, 1, 0, 2, 0)      
+Generador('time_growth_problem3_paralel', 5, 0, 1, 0, 4, 0)
+Generador('time_growth_problem4_paralel', 10, 0, 1, 0, 9, 0)
+Generador('time_growth_problem5_paralel', 20, 0, 1, 0, 19, 0)
+Generador('time_growth_problem6_paralel', 40, 0, 1, 0, 39, 0)
