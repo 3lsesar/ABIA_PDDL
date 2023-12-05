@@ -30,15 +30,15 @@
             (and 
                 (not (llegit ?l))
                 (<= (+ (pag_mes ?m) (pagines ?l)) 800)
-                (forall (?l3 - llibre) ;comprova que tots les predecessors de l2 estan llegits abans de m
+                (forall (?l2 - llibre)
                     (and
-                        (imply  (predecessor ?l3 ?l) 
-                            (and (llegit ?l3) (<(mes_lectura ?l3) (mes ?m))); (not (exists (?l4 - llibre) (and (not(llegit ?l4)) (paralel ?l4 ?l3)))) )   
+                        (imply  (predecessor ?l2 ?l) 
+                            (and (llegit ?l2) (<(mes_lectura ?l2) (mes ?m)))  
                         )
-                        (imply (and  (llegit ?l3) (or (paralel ?l3 ?l) (paralel ?l ?l3)))
+                        (imply (and  (llegit ?l2) (or (paralel ?l2 ?l) (paralel ?l ?l2)))
                             (and
-                                (<= (- (mes_lectura ?l3) (mes ?m)) 1)
-                                (<= (- (mes ?m) (mes_lectura ?l3)) 1)
+                                (<= (- (mes_lectura ?l2) (mes ?m)) 1)
+                                (<= (- (mes ?m) (mes_lectura ?l2)) 1)
                             )
                         )
                     )          
@@ -53,7 +53,7 @@
                 (increase (pag_mes ?m) (pagines ?l))
                 (not(per_llegir ?l))
                 (forall (?l2 - llibre)
-                    (when (and (not(llegit ?l2)) (or (paralel ?l ?l2) (paralel ?l2 ?l))) ;si L2 és paralel de L1 i no s'ha llegit ni està per llegir
+                    (when (and (not(llegit ?l2)) (or (paralel ?l ?l2) (paralel ?l2 ?l)))
                         (per_llegir ?l2)
                     )
                 ) 
