@@ -43,7 +43,7 @@ class Generador:
                 
                 else:
                     for elem in self.predecesors:  
-                        return elem.comp_pred(book)          
+                        return elem.comp_paralel(book)          
             else:
                 return False
             return True
