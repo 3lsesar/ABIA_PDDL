@@ -189,6 +189,7 @@ class Generador:
             llibre = random.choice(self.llibres)
             while llibre.llegit == True:
                 llibre = random.choice(self.llibres)
+            llibre.llegir()
             archivo.write("  (per_llegir ")
             archivo.write(llibre.name)
             archivo.write(") \n")
