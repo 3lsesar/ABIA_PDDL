@@ -1,12 +1,13 @@
 import random
 
-
 class Generador:
     class Node:
         def __init__(self, name):
             self.name = name
             self.predecesors = []
             self.paralel = []
+            #self.pagines = str(random.randint(50,800))
+            self.pagines = str(400)
             self.llegit = False
 
         def __str__(self):
@@ -58,25 +59,38 @@ class Generador:
 
         self.llibres = []
 
-        with open (self.archivo, 'w') as archivo:
+        with open (self.archivo + '.pddl', 'w') as archivo:
              self.generador_objectes(archivo)
              self.generador_mesos(archivo)
              self.generador_llegits(archivo)
              self.generador_predecesors(archivo)
+             self.generador_pagines_mes(archivo)
+             self.generador_pagines_llibre(archivo)
              self.generador_paralels(archivo)
              self.generador_objectius(archivo)
+             self.generador_tancament(archivo)
 
     def generador_objectes(self,archivo):
-        archivo.write("(define (problem problema_llibres) \n")
+        archivo.write("(define (problem ")
+        archivo.write(self.archivo)
+        archivo.write(") \n")
         archivo.write(" (:domain domini_llibres) \n")
         archivo.write(" (:objects gener febrer marc abril maig juny juliol agost setembre octubre novembre desembre - mes \n") 
         archivo.write("           ")
         
-        for i in range(65, self.num_llibres + 65):
-            character = chr(i)
-            archivo.write(character)
-            archivo.write(" ")
-            self.llibres.append(self.Node(character))
+        for i in range(self.num_llibres):
+            if  0 <= i > 26:
+                a = i + 65
+                character = chr(a)
+                archivo.write(character)
+                archivo.write(" ")
+                self.llibres.append(self.Node(character))
+            else:
+                a = i + 97
+                character = chr(a)
+                archivo.write(character)
+                archivo.write(" ")
+                self.llibres.append(self.Node(character))
         archivo.write("- llibre) \n")
     
     def generador_mesos(self,archivo):
@@ -95,33 +109,23 @@ class Generador:
         archivo.write("  (= (mes novembre) 11) \n")
         archivo.write("  (= (mes desembre) 12) \n")
         archivo.write("\n")
-        archivo.write("  (predecessor gener febrer) \n")
-        archivo.write("  (predecessor febrer marc) \n")
-        archivo.write("  (predecessor marc abril) \n")
-        archivo.write("  (predecessor abril maig) \n")
-        archivo.write("  (predecessor maig juny) \n")
-        archivo.write("  (predecessor juny juliol) \n")
-        archivo.write("  (predecessor juliol agost) \n")
-        archivo.write("  (predecessor agost setembre) \n")
-        archivo.write("  (predecessor setembre octubre) \n")
-        archivo.write("  (predecessor octubre novembre) \n")
-        archivo.write("  (predecessor novembre desembre) \n")
-        archivo.write("  (predecessor desembre gener) \n")
-        archivo.write("\n")
 
     def generador_llegits(self,archivo):
         for i in range(self.num_llegits):
             llibre = random.choice(self.llibres)
-            llibre.llegir()
-            archivo.write("  (llegit ")
-            archivo.write(llibre.name)
-            archivo.write(") \n")
-            archivo.write("  (= (mes_lectura ")
-            archivo.write(llibre.name)
-            archivo.write(") ")
-            archivo.write(str(i+1))
-            archivo.write(") \n")
-            archivo.write("\n")
+            if llibre.llegit == True:\
+                llibre = random.choice(self.llibres)
+            else:
+                llibre.llegir()
+                archivo.write("  (llegit ")
+                archivo.write(llibre.name)
+                archivo.write(") \n")
+                archivo.write("  (= (mes_lectura ")
+                archivo.write(llibre.name)
+                archivo.write(") ")
+                archivo.write(str(i+1))
+                archivo.write(") \n")
+                archivo.write("\n")
         archivo.write("\n")
          
     def generador_predecesors(self,archivo):
@@ -137,6 +141,29 @@ class Generador:
             archivo.write(llibre.name)
             archivo.write(") \n")
         archivo.write("\n")
+
+    def generador_pagines_mes(self, archivo):
+        archivo.write("  (= (pag_mes gener) 0) \n")
+        archivo.write("  (= (pag_mes febrer) 0) \n")
+        archivo.write("  (= (pag_mes marc) 0) \n")
+        archivo.write("  (= (pag_mes abril) 0) \n")
+        archivo.write("  (= (pag_mes maig) 0) \n")
+        archivo.write("  (= (pag_mes juny) 0) \n")
+        archivo.write("  (= (pag_mes juliol) 0) \n")
+        archivo.write("  (= (pag_mes agost) 0) \n")
+        archivo.write("  (= (pag_mes setembre) 0) \n")
+        archivo.write("  (= (pag_mes octubre) 0) \n")
+        archivo.write("  (= (pag_mes novembre) 0) \n")
+        archivo.write("  (= (pag_mes desembre) 0) \n")
+        archivo.write("\n")
+
+    def generador_pagines_llibre(self, archivo):
+        for elem in self.llibres:
+            archivo.write("  (= (pagines ")
+            archivo.write(elem.name)
+            archivo.write(") ")
+            archivo.write(elem.pagines)
+            archivo.write(") \n")
 
     def generador_paralels(self,archivo):
         for _ in range(self.num_paralels):
@@ -159,18 +186,24 @@ class Generador:
         archivo.write("\n")
 
     def generador_objectius(self,archivo):
-        archivo.write("  (:goal \n")
-        archivo.write("   (and \n")
         for i in range(self.num_objectius):
             llibre = random.choice(self.llibres)
             while llibre.llegit == True:
                 llibre = random.choice(self.llibres)
-            archivo.write("   (llegit ")
+            archivo.write("  (per_llegir ")
             archivo.write(llibre.name)
             archivo.write(") \n")
-        archivo.write("   ) \n")
+        archivo.write(" ) \n")
+        archivo.write("\n")
+    
+    def generador_tancament(self, archivo):
+        archivo.write(" (:goal")
+        archivo.write("  (forall (?l - llibre) \n")
+        archivo.write("   (not (per_llegir ?l)) \n")
         archivo.write("  ) \n")
         archivo.write(" ) \n")
-        archivo.write(") \n")
+        archivo.write(")")
 
-Generador('provaF.pddl', 20, 2, 1, 7, 5)         
+        
+## ("nombre_archivo", num_libros, leidos, objetivo, predecesores, paralelos)
+Generador('time_growth_problem6', 40, 0, 4, 36, 0)      
